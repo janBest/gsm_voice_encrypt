@@ -6,35 +6,13 @@
 --------------------Configuration: qpsk_mod - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP4994.tmp" with contents
-[
-/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /FR"Debug/" /Fp"Debug/qpsk_mod.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"E:\gitspace\qpsk\qpsk_mod.c"
-]
-Creating command line "cl.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP4994.tmp" 
-Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP4995.tmp" with contents
+Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSPA916.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/qpsk_mod.pdb" /debug /machine:I386 /out:"Debug/qpsk_mod.exe" /pdbtype:sept 
 .\Debug\qpsk_mod.obj
 ]
-Creating command line "link.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP4995.tmp"
+Creating command line "link.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSPA916.tmp"
 <h3>Output Window</h3>
-Compiling...
-qpsk_mod.c
-E:\gitspace\qpsk\qpsk_mod.c(85) : warning C4013: 'ad_simulator' undefined; assuming extern returning int
-E:\gitspace\qpsk\qpsk_mod.c(157) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
-E:\gitspace\qpsk\qpsk_mod.c(160) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
-E:\gitspace\qpsk\qpsk_mod.c(161) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
-E:\gitspace\qpsk\qpsk_mod.c(194) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
-E:\gitspace\qpsk\qpsk_mod.c(197) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
-E:\gitspace\qpsk\qpsk_mod.c(198) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
-E:\gitspace\qpsk\qpsk_mod.c(206) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
-E:\gitspace\qpsk\qpsk_mod.c(209) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
-E:\gitspace\qpsk\qpsk_mod.c(210) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
-E:\gitspace\qpsk\qpsk_mod.c(344) : warning C4244: 'function' : conversion from 'double ' to 'int ', possible loss of data
-E:\gitspace\qpsk\qpsk_mod.c(405) : warning C4244: 'return' : conversion from 'double ' to 'float ', possible loss of data
-E:\gitspace\qpsk\qpsk_mod.c(410) : warning C4244: 'return' : conversion from 'double ' to 'float ', possible loss of data
-E:\gitspace\qpsk\qpsk_mod.c(344) : warning C4761: integral size mismatch in argument; conversion supplied
 Linking...
 Creating command line "bscmake.exe /nologo /o"Debug/qpsk_mod.bsc"  .\Debug\qpsk_mod.sbr"
 Creating browse info file...
@@ -43,7 +21,7 @@ Creating browse info file...
 
 
 <h3>Results</h3>
-qpsk_mod.exe - 0 error(s), 14 warning(s)
+qpsk_mod.exe - 0 error(s), 0 warning(s)
 </pre>
 </body>
 </html>

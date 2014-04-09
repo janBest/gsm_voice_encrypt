@@ -36,8 +36,7 @@ float q_f(float t,double *smp_points,int l);
 
 ///////////////////////////
 
-float test_i(float a,float b,int n,void *in,int len);
-float test_q(float a,float b,int n,void *in,int len);
+
 
 
 
@@ -103,11 +102,9 @@ void qpsk_demodulate()
 	float b;
 	float T1;
 	float T2;
-	void *test_data;
-	int test_data_len;
+
 	FILE *fp;
-	FILE *fp2;
-	FILE *fp3;
+
 	///////////////////
 	void * input_data = NULL;
 	void * output_data = NULL;
@@ -116,13 +113,9 @@ void qpsk_demodulate()
 	double *smp_points;
 	float t=0;	
 	input_data = malloc( BLOCKSIZE * 20);
-	//////////////////////////////////
-	test_data = malloc(BLOCKSIZE);
-	init_input_data(test_data,&test_data_len);
-	/////////////////////////////////
+
 	fp = fopen("r.pcm","rb");
-	fp2 = fopen("p1.txt","w");
-	fp3 = fopen("p2.txt","w"); 
+
 	if(fp == NULL)
 	{
 		printf("can not open the file!\n");
@@ -133,21 +126,6 @@ void qpsk_demodulate()
 	pdata=(char *)input_data;
 	smp_points =(double *) malloc( sizeof(double) * input_data_len);
 	da_simulator(input_data,input_data_len,smp_points);
-/*
-	for(t=0;t < UNIT_TIME*2;t+= SAMPLING_INTERVAL/8)
-	{
-		if((t/SAMPLING_INTERVAL) == ((int)t/SAMPLING_INTERVAL))
-		{
-		fprintf(fp2,"%f %f =====\n",t,qpsk_s(t,test_data,test_data_len));
-		fprintf(fp3,"%f %f =====\n",t,sinc_interpolation(t,smp_points,input_data_len));
-		}
-		else
-		{
-		fprintf(fp2,"%f %f \n",t,qpsk_s(t,test_data,test_data_len));
-		fprintf(fp3,"%f %f \n",t,sinc_interpolation(t,smp_points,input_data_len));
-		}
-	}
-*/
 
 	
 	for(t=0;t < (input_data_len-1)*SAMPLING_INTERVAL;t+= UNIT_TIME*2)
@@ -155,14 +133,11 @@ void qpsk_demodulate()
 
 		T1 = t; 
 		T2 = T1+T;
-//		a = test_i(T1,T2,100,test_data,test_data_len);
-//		b = test_q(T1,T2,100,test_data,test_data_len);
+
 		a = (2*integral(i_f,T1,T2,100,smp_points,input_data_len))/T;
 		b = (2*integral(q_f,T1,T2,100,smp_points,input_data_len))/T;
-//		printf("%f %f\n",a,b);
-//		fprintf(fp2,"%f %f %f\n",sinc_interpolation(T1,smp_points,input_data_len),sinc_interpolation(T2,smp_points,input_data_len),sinc_interpolation((T2+T2)/2,smp_points,input_data_len));
-//		fprintf(fp2,"%f %f %f\n",qpsk_s(T1,test_data,test_data_len),qpsk_s(T2,test_data,test_data_len),qpsk_s((T2+T1)/2,test_data,test_data_len));
-		
+
+
 		if(a>0 && b>0)
 		{
 			printf("00");
@@ -182,34 +157,10 @@ void qpsk_demodulate()
 	}
 	
 	fclose(fp);
-	fclose(fp2);
-	fclose(fp3);
 }
 
 
-float test_i(float a,float b,int n,void *in,int len)
-{
-	float s,h,y;   
-	int i;   
-	s=(qpsk_s(a,in,len)*cos(2*PI*FREQUENCY*a/1000)+qpsk_s(b,in,len)*cos(2*PI*FREQUENCY*b/1000))/2;   
-	h=(b-a)/n; /*积分步长*/   
-	for(i=1;i<n;i++)    
-		s=s+qpsk_s(a+i*h,in,len)*cos(2*PI*FREQUENCY*(a+i*h)/1000);   
-	y=(2*s*h)/T;   
-	return y;/*返回积分值*/  
-}
 
-float test_q(float a,float b,int n,void *in,int len)
-{
-	float s,h,y;   
-	int i;   
-	s=(qpsk_s(a,in,len)*(-sin(2*PI*FREQUENCY*a/1000))+qpsk_s(b,in,len)*(-sin(2*PI*FREQUENCY*b/1000)))/2;   
-	h=(b-a)/n; /*积分步长*/   
-	for(i=1;i<n;i++)    
-		s=s+qpsk_s(a+i*h,in,len)*(-sin(2*PI*FREQUENCY*(a+i*h)/1000));   
-	y=(2*s*h)/T;   
-	return y;/*返回积分值*/  
-}
 
 
 
@@ -241,39 +192,39 @@ double sinc_interpolation(float t,const double *smp_points,const int l)
 //模拟AD转换器
 int ad_simulator(PSIGNAL_FUNC s,void *input_data,const int* input_data_len,void *output_data,int *output_data_len)
 {
-	FILE *fp2;
+//	FILE *fp2;
 	char *pout = (char *)output_data;
 	float i = 0;
 	int len = 0;
 	char tmp ;
-	fp2 = fopen("m.txt","w");
+//	fp2 = fopen("m.txt","w");
 	//采样
 	for(i =0; i<(*input_data_len) * UNIT_TIME; i+= SAMPLING_INTERVAL)
 	{
 		printf("%d %lf\n",len,s(i,input_data,*input_data_len));
-		fprintf(fp2,"%d %lf\n",len,s(i,input_data,*input_data_len));
+//		fprintf(fp2,"%d %lf\n",len,s(i,input_data,*input_data_len));
 		tmp = pcm_code(1,s(i,input_data,*input_data_len));
 		pout[len++]=tmp;
 	}
 	*output_data_len = len;
-	fclose(fp2);
+//	fclose(fp2);
 	return len;
 }
 
 //
 int da_simulator(void *input_data,const int input_data_len,double *smp_points)
 {
-	FILE *fp;
+//	FILE *fp;
 	int i=0;
 	char *pdata = (char*)input_data;
-	fp = fopen("d.txt","w");
+//	fp = fopen("d.txt","w");
 	for(i = 0;i < input_data_len;i+= 1)
 	{
 		smp_points[i]=pcm_decode(1,pdata[i]);
 	
-		fprintf(fp,"%d %f\n",i,smp_points[i]);
+//		fprintf(fp,"%d %f\n",i,smp_points[i]);
 	}
-	fclose(fp);
+//	fclose(fp);
 	return input_data_len;	
 }
 
@@ -330,7 +281,6 @@ int get_a_bit(const void * buffer,int i)
 	const char *pdata = (char *)buffer;
 	char tmp = pdata[i/8];
 	int d = i%8;
-//	printf("%d %d\n",i,( tmp >> d )&1);
 	return ( tmp >> (7-d) )&1;
 }
 
