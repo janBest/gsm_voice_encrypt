@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <math.h>
+#include <memory.h>
 
 typedef double (*PSIGNAL_FUNC)(float i,void *input_data,int input_data_len);
 
@@ -20,10 +21,13 @@ typedef double (*PSIGNAL_FUNC)(float i,void *input_data,int input_data_len);
 ////////////////////////////
 int init_input_data(void *input_data,int *input_data_len);
 void print_by_bit(void * buffer, int len);
-int get_a_bit(void * buffer,int i);
+int get_a_bit(const void * buffer,int i);
+void set_a_bit(void * buffer,int i,int b);
+
 double qpsk_s(float i,void *input_data,int input_data_len);
 char pcm_code(int V,double impulse);
 double pcm_decode(int V,char data);
+
 
 void qpsk_modulate();
 void qpsk_demodulate();
@@ -97,14 +101,13 @@ void qpsk_modulate()
 void qpsk_demodulate()
 {
 	///////////////////
-	char *pdata;
 	float a;
 	float b;
 	float T1;
 	float T2;
 
 	FILE *fp;
-
+	int bit_num = 0;
 	///////////////////
 	void * input_data = NULL;
 	void * output_data = NULL;
@@ -113,8 +116,9 @@ void qpsk_demodulate()
 	double *smp_points;
 	float t=0;	
 	input_data = malloc( BLOCKSIZE * 20);
-
-	fp = fopen("r.pcm","rb");
+	output_data = malloc( BLOCKSIZE );
+	memset(output_data,0,BLOCKSIZE);
+	fp = fopen("r3.pcm","rb");
 
 	if(fp == NULL)
 	{
@@ -123,10 +127,10 @@ void qpsk_demodulate()
 	}
 
 	input_data_len = fread(input_data,1,BLOCKSIZE * 20,fp);
-	pdata=(char *)input_data;
+
 	smp_points =(double *) malloc( sizeof(double) * input_data_len);
 	da_simulator(input_data,input_data_len,smp_points);
-
+	
 	
 	for(t=0;t < (input_data_len-1)*SAMPLING_INTERVAL;t+= UNIT_TIME*2)
 	{
@@ -140,22 +144,31 @@ void qpsk_demodulate()
 
 		if(a>0 && b>0)
 		{
-			printf("00");
+			set_a_bit(output_data,bit_num,0);
+			set_a_bit(output_data,bit_num+1,0);
+			//printf("00");
 		}
 		else if(a<0&&b>0)
 		{
-			printf("01");
+			set_a_bit(output_data,bit_num,0);
+			set_a_bit(output_data,bit_num+1,1);
+			//printf("01");
 		}
 		else if(a<0&&b<0)
 		{
-			printf("11");
+			set_a_bit(output_data,bit_num,1);
+			set_a_bit(output_data,bit_num+1,1);
+			//printf("11");
 		}
 		else if(a>0&&b<0)
 		{
-			printf("10");
-		}		
+			set_a_bit(output_data,bit_num,1);
+			set_a_bit(output_data,bit_num+1,0);
+			//printf("10");
+		}
+		bit_num+=2;
 	}
-	
+	print_by_bit(output_data,bit_num);
 	fclose(fp);
 }
 
@@ -283,6 +296,16 @@ int get_a_bit(const void * buffer,int i)
 	int d = i%8;
 	return ( tmp >> (7-d) )&1;
 }
+
+
+void set_a_bit(void * buffer,int i,int b)
+{
+	char *pdata = (char *)buffer;
+	int d = i%8;
+	pdata[i/8]=pdata[i/8] | (b<<(7-d));
+
+}
+
 
 char pcm_code(int V,double impulse)   
 {   
