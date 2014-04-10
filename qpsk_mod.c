@@ -23,6 +23,7 @@ int init_input_data(void *input_data,int *input_data_len);
 void print_by_bit(void * buffer, int len);
 int get_a_bit(const void * buffer,int i);
 void set_a_bit(void * buffer,int i,int b);
+double compute_error_rate(void * dest_data, void *source_data, int len);
 
 double qpsk_s(float i,void *input_data,int input_data_len);
 char pcm_code(int V,double impulse);
@@ -168,10 +169,28 @@ void qpsk_demodulate()
 		}
 		bit_num+=2;
 	}
+	init_input_data(input_data, &input_data_len);
+	printf("\nResult Data");
 	print_by_bit(output_data,bit_num);
+	printf("\n\n");
+	printf("Original Data");
+	print_by_bit(input_data, bit_num);
+	printf("\n\nError Rate:\n%lf\n", compute_error_rate(input_data, output_data, bit_num));
 	fclose(fp);
 }
-
+double compute_error_rate(void * dest_data, void *source_data,int len)
+{
+	const char *pdest_data = (char *)dest_data;
+	const char *psource_data = (char *)source_data;
+	int error = 0;
+	int i = 0;
+	for (i = 0; i < len; i++)
+	{
+		if (get_a_bit((void *)pdest_data, i) != get_a_bit((void*)psource_data, i))
+			error++;
+	}
+	return error * 1.0 / len;
+}
 
 
 
